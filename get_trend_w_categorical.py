@@ -19,7 +19,7 @@ def get_trend_w_categorical(x, categories, trend_name, index_map, mapping):
 
         df = pd.read_excel("mobile_app_data_usage.xlsx")
 
-        type_apps = [f'Q15_{i}' for i in range(1, 24) if i != 3]
+        type_apps = [f'Q15_{i}' for i in range(1, 24)]
 
         trend = 'Q16'
 
@@ -28,29 +28,30 @@ def get_trend_w_categorical(x, categories, trend_name, index_map, mapping):
         trend_name = 'Gender'
 
         categories = {
-                    'Q15_1'  : 'Navigation',
-                    'Q15_2'  : 'Business',
-                    'Q15_4'  : 'Travel',
-                    'Q15_5'  : 'Books',
-                    'Q15_6'  : 'Photo & Video',
-                    'Q15_7'  : 'Lifestyle',
-                    'Q15_8'  : 'Entertainment',
-                    'Q15_9'  : 'Finance',
-                    'Q15_10' : 'News',
-                    'Q15_11' : 'Health & Fitness',
-                    'Q15_12' : 'Games',
-                    'Q15_13' : 'Food & Drink',
-                    'Q15_14' : 'Education',
-                    'Q15_15' : 'Medical',
-                    'Q15_16' : 'Social Networking',
-                    'Q15_17' : 'Reference',
-                    'Q15_18' : 'Sports',
-                    'Q15_19' : 'Utilities',
-                    'Q15_20' : 'Weather',
-                    'Q15_21' : 'Productivity',
-                    'Q15_22' : 'Music',
-                    'Q15_23' : 'Other'
-                }
+            'Q15_1'  : 'Navigation',
+            'Q15_2'  : 'Business',
+            'Q15_3'  : 'Catalogues',
+            'Q15_4'  : 'Travel',
+            'Q15_5'  : 'Books',
+            'Q15_6'  : 'Photo & Video',
+            'Q15_7'  : 'Lifestyle',
+            'Q15_8'  : 'Entertainment',
+            'Q15_9'  : 'Finance',
+            'Q15_10' : 'News',
+            'Q15_11' : 'Health & Fitness',
+            'Q15_12' : 'Games',
+            'Q15_13' : 'Food & Drink',
+            'Q15_14' : 'Education',
+            'Q15_15' : 'Medical',
+            'Q15_16' : 'Social Networking',
+            'Q15_17' : 'Reference',
+            'Q15_18' : 'Sports',
+            'Q15_19' : 'Utilities',
+            'Q15_20' : 'Weather',
+            'Q15_21' : 'Productivity',
+            'Q15_22' : 'Music',
+            'Q15_23' : 'Other'
+        }
 
         x = df[trend]
 
@@ -110,7 +111,7 @@ def get_trend_w_categorical(x, categories, trend_name, index_map, mapping):
 
 df = pd.read_excel("mobile_app_data_usage.xlsx")
 
-type_apps = [f'Q15_{i}' for i in range(1, 24) if i != 3]
+type_apps = [f'Q15_{i}' for i in range(1, 24)]
 
 trend = 'Q19'
 
@@ -142,6 +143,7 @@ trend_name = 'Nationality'
 categories = {
             'Q15_1'  : 'Navigation',
             'Q15_2'  : 'Business',
+            'Q15_3'  : 'Catalogues',
             'Q15_4'  : 'Travel',
             'Q15_5'  : 'Books',
             'Q15_6'  : 'Photo & Video',
