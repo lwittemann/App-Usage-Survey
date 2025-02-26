@@ -19,7 +19,7 @@ def get_trend_w_categorical(x, categories, trend_name, index_map, mapping):
 
         df = pd.read_excel("mobile_app_data_usage.xlsx")
 
-        type_apps = [f'Q15_{i}' for i in range(1, 24) if i != 3]
+        type_apps = [f'Q15_{i}' for i in range(1, 24)]
 
         trend = 'Q16'
 
@@ -28,29 +28,30 @@ def get_trend_w_categorical(x, categories, trend_name, index_map, mapping):
         trend_name = 'Gender'
 
         categories = {
-                    'Q15_1'  : 'Navigation',
-                    'Q15_2'  : 'Business',
-                    'Q15_4'  : 'Travel',
-                    'Q15_5'  : 'Books',
-                    'Q15_6'  : 'Photo & Video',
-                    'Q15_7'  : 'Lifestyle',
-                    'Q15_8'  : 'Entertainment',
-                    'Q15_9'  : 'Finance',
-                    'Q15_10' : 'News',
-                    'Q15_11' : 'Health & Fitness',
-                    'Q15_12' : 'Games',
-                    'Q15_13' : 'Food & Drink',
-                    'Q15_14' : 'Education',
-                    'Q15_15' : 'Medical',
-                    'Q15_16' : 'Social Networking',
-                    'Q15_17' : 'Reference',
-                    'Q15_18' : 'Sports',
-                    'Q15_19' : 'Utilities',
-                    'Q15_20' : 'Weather',
-                    'Q15_21' : 'Productivity',
-                    'Q15_22' : 'Music',
-                    'Q15_23' : 'Other'
-                }
+            'Q15_1'  : 'Navigation',
+            'Q15_2'  : 'Business',
+            'Q15_3'  : 'Catalogues',
+            'Q15_4'  : 'Travel',
+            'Q15_5'  : 'Books',
+            'Q15_6'  : 'Photo & Video',
+            'Q15_7'  : 'Lifestyle',
+            'Q15_8'  : 'Entertainment',
+            'Q15_9'  : 'Finance',
+            'Q15_10' : 'News',
+            'Q15_11' : 'Health & Fitness',
+            'Q15_12' : 'Games',
+            'Q15_13' : 'Food & Drink',
+            'Q15_14' : 'Education',
+            'Q15_15' : 'Medical',
+            'Q15_16' : 'Social Networking',
+            'Q15_17' : 'Reference',
+            'Q15_18' : 'Sports',
+            'Q15_19' : 'Utilities',
+            'Q15_20' : 'Weather',
+            'Q15_21' : 'Productivity',
+            'Q15_22' : 'Music',
+            'Q15_23' : 'Other'
+        }
 
         x = df[trend]
 
@@ -62,12 +63,12 @@ def get_trend_w_categorical(x, categories, trend_name, index_map, mapping):
 
         what gets printed:
 
-                            Navigation  Business  Travel  Books  ...  Weather  Productivity  Music  Other
-            Gender                                       ...                                     
-            Female         693       226     490    762  ...     1008           380   1030    172
-            Male          1022       472     566    719  ...      922           574   1015    209
+                            Navigation  Business  Travel  Books  Photo & Video  ...  Weather  Productivity  Music  Other  Count
+                Female         693       226     490    762            941  ...     1008           380   1030    172   2721
+                Male          1022       472     566    719            903  ...      922           574   1015    209   2645
+                Total         1715       698    1056   1481           1844  ...     1930           954   2045    381   5366
 
-            [2 rows x 22 columns] <class 'pandas.core.frame.DataFrame'>
+            [3 rows x 23 columns] <class 'pandas.core.frame.DataFrame'>
     '''
     assert isinstance(trend_name, str), "trend_name must be a str"
     assert isinstance(index_map, dict), "index_map must be a dict"
@@ -83,58 +84,93 @@ def get_trend_w_categorical(x, categories, trend_name, index_map, mapping):
     categories_renamed = categories_renamed.apply(pd.to_numeric, errors='coerce').fillna(0).astype(int)
 
     # Remove rows in x where the value is NaN or missing
-    mask = x.notna()  # True for non-NaN values in x
+    mask = x.notna()
     x_filtered = x[mask]
     categories_filtered = categories_renamed[mask.values]
 
-    # Group by the values in x (Male and Female) and sum the categories for each group
+    # Group by the values in x (e.g., Male and Female) and sum the categories for each group
     grouped = categories_filtered.groupby(x_filtered).sum()
+
+    # Add count of each index_map
+    count_series = x_filtered.value_counts().rename("Count")
+
+    # Merge count column into the grouped DataFrame
+    grouped = grouped.merge(count_series, left_index=True, right_index=True)
 
     # Add a name to the index of the grouped DataFrame
     grouped.index.name = trend_name
 
+    # Calculate the total row (sum of each column)
+    total_row = grouped.sum().to_frame().T
+    total_row.index = ["Total"]
+
+    # Append the total row to the bottom of the DataFrame
+    grouped = pd.concat([grouped, total_row])
+
     return grouped
 
-# df = pd.read_excel("mobile_app_data_usage.xlsx")
+df = pd.read_excel("mobile_app_data_usage.xlsx")
 
-# type_apps = [f'Q15_{i}' for i in range(1, 24) if i != 3]
+type_apps = [f'Q15_{i}' for i in range(1, 24)]
+
+trend = 'Q19'
+
+index_map = {1 : 'American', 
+             2 : 'Australian', 
+             3 : 'Brazillian', 
+             4 : 'British', 
+             5 : 'Canadian', 
+             6 : 'Chinese', 
+             7 : 'French', 
+             8 : 'German',
+             9 : 'Indian', 
+            10 : 'Italian', 
+            11 : 'Japanese', 
+            12 : 'Mexican', 
+            13 : 'Russian', 
+            14 : 'South Korean', 
+            15 : 'Spanish', 
+            16 : 'Other'}
+
+trend_name = 'Nationality'
 
 # trend = 'Q16'
 
 # index_map = {1 : 'Male', 
-#              2 : 'Female'}
+#             2 : 'Female'}
 # trend_name = 'Gender'
 
-# categories = {
-#             'Q15_1'  : 'Navigation',
-#             'Q15_2'  : 'Business',
-#             'Q15_4'  : 'Travel',
-#             'Q15_5'  : 'Books',
-#             'Q15_6'  : 'Photo & Video',
-#             'Q15_7'  : 'Lifestyle',
-#             'Q15_8'  : 'Entertainment',
-#             'Q15_9'  : 'Finance',
-#             'Q15_10' : 'News',
-#             'Q15_11' : 'Health & Fitness',
-#             'Q15_12' : 'Games',
-#             'Q15_13' : 'Food & Drink',
-#             'Q15_14' : 'Education',
-#             'Q15_15' : 'Medical',
-#             'Q15_16' : 'Social Networking',
-#             'Q15_17' : 'Reference',
-#             'Q15_18' : 'Sports',
-#             'Q15_19' : 'Utilities',
-#             'Q15_20' : 'Weather',
-#             'Q15_21' : 'Productivity',
-#             'Q15_22' : 'Music',
-#             'Q15_23' : 'Other'
-#         }
+categories = {
+            'Q15_1'  : 'Navigation',
+            'Q15_2'  : 'Business',
+            'Q15_3'  : 'Catalogues',
+            'Q15_4'  : 'Travel',
+            'Q15_5'  : 'Books',
+            'Q15_6'  : 'Photo & Video',
+            'Q15_7'  : 'Lifestyle',
+            'Q15_8'  : 'Entertainment',
+            'Q15_9'  : 'Finance',
+            'Q15_10' : 'News',
+            'Q15_11' : 'Health & Fitness',
+            'Q15_12' : 'Games',
+            'Q15_13' : 'Food & Drink',
+            'Q15_14' : 'Education',
+            'Q15_15' : 'Medical',
+            'Q15_16' : 'Social Networking',
+            'Q15_17' : 'Reference',
+            'Q15_18' : 'Sports',
+            'Q15_19' : 'Utilities',
+            'Q15_20' : 'Weather',
+            'Q15_21' : 'Productivity',
+            'Q15_22' : 'Music',
+            'Q15_23' : 'Other'
+        }
 
-# x = df[trend]
+x = df[trend]
 
-# cats = df[type_apps]
+cats = df[type_apps]
 
-# result = get_trend_w_categorical(x,cats,trend_name,index_map, categories)
+result = get_trend_w_categorical(x,cats,trend_name,index_map, categories)
 
-# print(result, type(result))
+print(result, type(result))
 
