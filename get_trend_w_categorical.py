@@ -1,5 +1,9 @@
 import pandas as pd
 
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib import colormaps 
+
 def get_trend_w_categorical(x, categories, trend_name, index_map, mapping):
     '''
     takes in column to get trend (ie gender, Q16), and categorical columns (ie Q15_i). counts up the total categories
@@ -109,7 +113,7 @@ def get_trend_w_categorical(x, categories, trend_name, index_map, mapping):
 
     return grouped
 
-df = pd.read_excel("mobile_app_data_usage.xlsx")
+df = pd.read_excel(r"D:\UCSD Stuff\WI25\ECE 143\project\App-Usage-Survey\mobile_app_user_dataset.xlsx")
 
 type_apps = [f'Q15_{i}' for i in range(1, 24)]
 
@@ -171,6 +175,84 @@ x = df[trend]
 cats = df[type_apps]
 
 result = get_trend_w_categorical(x,cats,trend_name,index_map, categories)
+# print(result, type(result))
 
-print(result, type(result))
+def plt_3d_bar():
+    fig = plt.figure()
+    ax = fig.add_subplot(projection='3d')
 
+    xticks = result.index.values.tolist()[:-1]
+    yticks = result.columns.values.tolist()[:-1]
+
+    # fake data
+    _x = np.arange(len(xticks))
+    _x = _x + 1
+    _y = np.arange(len(yticks))
+    _y = _y + 1
+    _xx, _yy = np.meshgrid(_x, _y)
+    x, y = _xx.ravel(), _yy.ravel()
+
+    top = []
+    for i in range(len(xticks) * len(yticks)):
+        top.append(result.iloc[i//len(yticks) , i % len(yticks)])
+
+    bottom = np.zeros_like(top)
+    width = depth = 1
+
+    cls_ls = []
+    for x_t in range(len(xticks)):
+        cls = colormaps[list(colormaps)[x_t]].resampled(len(yticks))
+        cls_ls_t = [cls(i) for i in range(len(yticks))]
+        cls_ls.extend(cls_ls_t)
+
+    ax.bar3d(x + 0.25, y + 0.25, bottom, width, depth, top, color=cls_ls, shade=True)
+    ax.set_title('Plot')
+
+
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_zlabel('Z')
+
+    ax.set_xticks(_x, xticks)
+    ax.set_yticks(_y, yticks)
+
+    figManager = plt.get_current_fig_manager()
+    figManager.window.showMaximized()
+
+    plt.show()
+
+
+def plot_heatmap():
+    xticks = result.index.values.tolist()[:-1]
+    yticks = result.columns.values.tolist()[:-1]
+
+    data_tb = []
+    for i in range(len(xticks)):
+        dat = []
+        for j in range(len(yticks)):
+            dat.append(result.iloc[i , j])
+        data_tb.append(dat)
+
+    _x = np.arange(len(xticks))
+    _y = np.arange(len(yticks))
+
+    fig = plt.figure()
+    ax = fig.add_subplot()
+
+
+    ax.imshow( data_tb, cmap='autumn') 
+    ax.set_yticks(_x, xticks)
+    ax.set_xticks(_y, yticks, rotation=90, ha='right')
+
+    for i in range(len(xticks)):
+        for j in range(len(yticks)):
+            text = ax.text(j, i, data_tb[i][j],
+                                ha="center", va="center", color="w")
+
+    ax.set_title( "2-D Heat Map" ) 
+    plt.show() 
+
+
+# Uncomment any one of these two functions to plot the relevant things 
+# plt_3d_bar()
+# plot_heatmap()
