@@ -186,9 +186,7 @@ def plt_3d_bar():
 
     # fake data
     _x = np.arange(len(xticks))
-    _x = _x + 1
     _y = np.arange(len(yticks))
-    _y = _y + 1
     _xx, _yy = np.meshgrid(_x, _y)
     x, y = _xx.ravel(), _yy.ravel()
 
@@ -197,13 +195,19 @@ def plt_3d_bar():
         top.append(result.iloc[i//len(yticks) , i % len(yticks)])
 
     bottom = np.zeros_like(top)
-    width = depth = 1
+    width = depth = 0.75
 
     cls_ls = []
-    for x_t in range(len(xticks)):
-        cls = colormaps[list(colormaps)[x_t]].resampled(len(yticks))
-        cls_ls_t = [cls(i) for i in range(len(yticks))]
-        cls_ls.extend(cls_ls_t)
+    # # To have different colors for each bar
+    # for x_t in range(len(xticks)):
+    #     cls = colormaps[list(colormaps)[x_t]].resampled(len(yticks))
+    #     cls_ls_t = [cls(i) for i in range(len(yticks))]
+    #     cls_ls.extend(cls_ls_t)
+
+    # To have heatmap colors for each bar
+    max_val = max(top)
+    cls = colormaps['brg'].resampled(max_val)
+    cls_ls = [cls(x) for x in top]
 
     ax.bar3d(x + 0.25, y + 0.25, bottom, width, depth, top, color=cls_ls, shade=True)
     ax.set_title('Plot')
@@ -213,8 +217,8 @@ def plt_3d_bar():
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
 
-    ax.set_xticks(_x, xticks)
-    ax.set_yticks(_y, yticks)
+    ax.set_xticks(_x+1, xticks)
+    ax.set_yticks(_y+1, yticks)
 
     figManager = plt.get_current_fig_manager()
     figManager.window.showMaximized()
@@ -254,5 +258,5 @@ def plot_heatmap():
 
 
 # Uncomment any one of these two functions to plot the relevant things 
-# plt_3d_bar()
+plt_3d_bar()
 # plot_heatmap()
