@@ -11,6 +11,36 @@ def recode_q30(val):
         return 2
     else:
         return -1  #the epople who did not respond
+    
+def plot_2d_trend(df, title):
+    """
+    Plots multiple columns from a DataFrame using a scatter plot with distinct colors for each column
+    
+    Params:
+        df: (pd.DataFrame) where each column represents a series to be plotted
+        title: (str) title of the plot
+    
+    Returns:
+        None (displays the plot)
+    """
+    plt.figure(figsize=(10, 6))
+    
+    # Define a list of colors for dots (red = disagree, blue = neutral, green = agree)
+    colors = ['red', 'gray', 'green']
+    
+    # Iterate over each column and plot it with a different color
+    for i, col in enumerate(df.columns):
+        plt.scatter(df.index, df[col], label=col, color=colors[i % len(colors)])
+
+    plt.xlabel(df.index.name if df.index.name else "Personalities")
+    plt.ylabel("Count")
+    plt.title(title)
+    
+    plt.xticks(rotation=45)
+    plt.grid(True, linestyle='--', alpha=0.7)
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
 
 df = pd.read_excel('mobile_app_data_usage.xlsx', sheet_name='Sheet1')
 
@@ -49,7 +79,7 @@ cats = df[q30_new_cols]
 
 categories_renamed = cats.rename(columns=categories)
 
-x = df['Q15_5']
+x = df['Q15_10']
 
 # Remove rows in x where the value is NaN or missing
 mask = x.notna()
@@ -78,4 +108,7 @@ result_counts = result_counts.loc[['Disagree', 'Neutral', 'Agree']]
 result_counts.index.name = "Books"
 
 # Display the final DataFrame
-print(result_counts.T)
+# print(type(result_counts))
+
+plot_2d_trend(result_counts.T, "News Apps vs Personalities")
+
