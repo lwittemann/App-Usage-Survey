@@ -1,0 +1,114 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+def recode_q30(val):
+    if val == 4: # nutrual 
+        return 1
+    elif val in [1, 2, 3]: # more disagree to personality 
+        return 0
+    elif val in [5, 6, 7]: # more agree to the perosnality 
+        return 2
+    else:
+        return -1  #the epople who did not respond
+    
+def plot_2d_trend(df, title):
+    """
+    Plots multiple columns from a DataFrame using a scatter plot with distinct colors for each column
+    
+    Params:
+        df: (pd.DataFrame) where each column represents a series to be plotted
+        title: (str) title of the plot
+    
+    Returns:
+        None (displays the plot)
+    """
+    plt.figure(figsize=(10, 6))
+    
+    # Define a list of colors for dots (red = disagree, blue = neutral, green = agree)
+    colors = ['red', 'gray', 'green']
+    
+    # Iterate over each column and plot it with a different color
+    for i, col in enumerate(df.columns):
+        plt.scatter(df.index, df[col], label=col, color=colors[i % len(colors)])
+
+    plt.xlabel(df.index.name if df.index.name else "Personalities")
+    plt.ylabel("Count")
+    plt.title(title)
+    
+    plt.xticks(rotation=45)
+    plt.grid(True, linestyle='--', alpha=0.7)
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+
+df = pd.read_excel('mobile_app_data_usage.xlsx', sheet_name='Sheet1')
+
+q15_cols = [f'Q15_{i}' for i in range(1, 24)]   # Q15_1 to Q15_23
+q30_cols = [f'Q30_{i}' for i in range(1, 11)]   # Q30_1 to Q30_10
+
+
+# 4. FILL MISSING VALUES
+df[q15_cols] = df[q15_cols].fillna(0)
+df[q30_cols] = df[q30_cols].fillna(4)
+
+# to numerical 
+df[q15_cols] = df[q15_cols].apply(pd.to_numeric, errors='coerce')
+df[q30_cols] = df[q30_cols].apply(pd.to_numeric, errors='coerce')
+
+# Create new recoded columns for each Q30 item
+for original_column in q30_cols:
+    new_column_name = f"{original_column}_new"
+    df[new_column_name] = df[original_column].apply(recode_q30)
+
+categories = {
+            'Q30_1_new'  : 'Extraverted, enthusiastic',
+            'Q30_2_new'  : 'Critical, quarralsome',
+            'Q30_3_new'  : 'Dependable, self-disciplined',
+            'Q30_4_new'  : 'Anxious, easily upset',
+            'Q30_5_new'  : 'Open to new experiences, complex',
+            'Q30_6_new'  : 'Reserved, quiet',
+            'Q30_7_new'  : 'Sympathetic, warm',
+            'Q30_8_new'  : 'Disorganized, careless',
+            'Q30_9_new'  : 'Calm, emotionally stable',
+            'Q30_10_new' : 'Conventional, uncreative'}
+
+q30_new_cols = [f"{col}_new" for col in q30_cols]
+
+cats = df[q30_new_cols]
+
+categories_renamed = cats.rename(columns=categories)
+
+x = df['Q15_10']
+
+# Remove rows in x where the value is NaN or missing
+mask = x.notna()
+x_filtered = x[mask]
+categories_filtered = categories_renamed[mask.values]
+
+# Define mapping of numerical values to labels
+value_map = {0: 'Disagree', 1: 'Neutral', 2: 'Agree'}
+
+# Remove rows where x is NaN and filter only where x == 1
+filtered_data = categories_filtered[x_filtered == 1]
+
+# Remove -1 values (-1 represents did not respond)
+filtered_data = filtered_data.replace(-1, np.nan).dropna(how="all")
+
+# Count occurrences of 0, 1, and 2 in each column
+result_counts = filtered_data.apply(pd.Series.value_counts).fillna(0).astype(int)
+
+# Rename index values explicitly using the value_map
+result_counts = result_counts.rename(index=value_map)
+
+# Ensure order of rows (Disagree, Neutral, Agree)
+result_counts = result_counts.loc[['Disagree', 'Neutral', 'Agree']]
+
+# Set index name
+result_counts.index.name = "Books"
+
+# Display the final DataFrame
+# print(type(result_counts))
+
+plot_2d_trend(result_counts.T, "News Apps vs Personalities")
+
