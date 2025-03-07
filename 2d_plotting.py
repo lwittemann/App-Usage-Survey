@@ -41,8 +41,9 @@ def plot_2d_trend(df, title):
     return df
 
 # Main program
-file_path = "data/mobile_app_user_dataset_standardCurrency3.xlsx"
-df = pd.read_excel(file_path)
+# file_path = "data/mobile_app_user_dataset_standardCurrency3.xlsx"
+# df = pd.read_excel(file_path)
+df = pd.read_excel(r"D:\UCSD Stuff\WI25\ECE 143\project\App-Usage-Survey\mobile_app_user_dataset.xlsx")
 
 trend = 'Q19'
 type_apps = [f'Q15_{i}' for i in range(1, 24)]
