@@ -123,9 +123,9 @@ def standardize_income(fName: str, conversionChart: list, outputFName: str):
     #insert title in first row
     incomesTotal[0] = 'Standardized incomes in USD. Ranges: 0 - 10,000 (1) 10,001 - 20,000 (2) 20,001 - 30,000 (3) 30,001 - 50,000 (4) 50,001 - 70,000 (5) 70,001 - 100,000 (6) 100,001 - 150,000 (7) 150,001 - 200,000 (8) 200,001 - 250,000 (9) 250,001 - 350,000 (10) More than 350,000 (11)'
     #insert converted row into dataframe
-    dataset.insert(141, 'Q29',incomesTotal)
+    dataset.insert(140, 'Q29',incomesTotal)
     #output to excel file
-    dataset.to_excel(outputFName)
+    #dataset.to_excel(outputFName)
 
     #compare invalids 
     #inv1 = 0
