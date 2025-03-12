@@ -27,7 +27,11 @@
     personality_vs_app_downloading:
         Author: 
             Zihao Yang
-        Purpose and Usage:
+        Purpose and Usage: 
+        (1)Transformed the original 7-point scale into three categories (disagree, neutral, agree) to simplify personality data.
+        (2)Calculated the average download rates for 23 different app categories based on these personality groups.
+        (3)Created heatmaps to compare how different personality traits correlate with various app download behaviors. 
+        
 
     ProjectPlotting: 
         Author(s):
@@ -48,8 +52,8 @@
     PlotHeatmapss:
         Author: 
             Zihao Yang
-        Purpose and Usage:
-
+        Purpose and Usage: 
+        Heatmaps serve as a visualization of display the aggregated mean download rates of various app categories across different personality groups. B
 
 Third Party Modules:
 
