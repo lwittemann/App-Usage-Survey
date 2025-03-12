@@ -13,16 +13,19 @@
         Author: 
             Trevor Kam
         Purpose and Usage:
+            Takes in standardized currency column from Luke Whittemann's currency conversion and gets corresponding categorical responses from the survey to graph against and see trends
 
-    get_overal_apps:
+    get_overall_apps:
         Author: 
             Trevor Kam
         Purpose and Usage:
+            Takes in all the app categories and sums up the totals for each category to analyze overall downloaded apps.
 
     get_trend_w_categorical:
         Author: 
             Trevor Kam
         Purpose and Usage:
+            Takes in any single datasheet column and gets corresponding categorical responses from the survey to graph against and see trends
 
     personality_vs_app_downloading:
         Author: 
@@ -59,7 +62,7 @@ Third Party Modules:
 
     1. Pandas
 
-    2. 
+    2. Matplotlib
 
 
 
