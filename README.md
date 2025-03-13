@@ -40,7 +40,7 @@
         Author(s):
             Lingxiao Li, Mayank Kumar, Zihao Yang
         Purpose and Usage:
-            Simply a Jupyter notebook containg the visualization scripts(2d_plotting, 3D_Plots, and PlotHeatmapss)
+            Simply a Jupyter notebook containg the visualization scripts(2d_plotting, 3D_Plots, and PlotHeatmaps)
 
     2d_plotting:
         Author: 
@@ -51,12 +51,13 @@
         Author: 
             Mayank Kumar
         Purpose and Usage:
+            Simple python notebook to try out a 3Dplot of the given data 
 
-    PlotHeatmapss:
+    PlotHeatmaps:
         Author: 
-            Zihao Yang
+            Mayank Kumar, Zihao Yang
         Purpose and Usage: 
-        Heatmaps serve as a visualization of display the aggregated mean download rates of various app categories across different personality groups. B
+        Heatmaps serve as a visualization of display the aggregated mean download rates of various app categories across different personality groups.
 
 Third Party Modules:
 
